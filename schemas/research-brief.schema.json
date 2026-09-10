@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://creator-intel-pipeline.local/schemas/research-brief.schema.json",
+  "title": "ResearchBrief",
+  "type": "object",
+  "required": [
+    "id",
+    "weekOf",
+    "title",
+    "summary",
+    "findings",
+    "sourceRegister",
+    "suggestedExperiments",
+    "privacyNotes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "weekOf": { "type": "string", "format": "date" },
+    "title": { "type": "string", "minLength": 1 },
+    "summary": { "type": "string", "minLength": 1 },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["category", "claim", "evidenceSummary", "confidence", "recommendedAction"],
+        "additionalProperties": false,
+        "properties": {
+          "category": { "type": "string" },
+          "claim": { "type": "string" },
+          "evidenceSummary": { "type": "string" },
+          "confidence": {
+            "type": "string",
+            "enum": ["high", "medium", "low", "unknown"]
+          },
+          "sourcePointers": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "recommendedAction": { "type": "string" },
+          "personaVersion": { "type": "string" },
+          "privacyLevel": {
+            "type": "string",
+            "enum": ["public", "internal", "private", "paid"]
+          }
+        }
+      }
+    },
+    "sourceRegister": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["platform", "name", "accessType", "reliability"],
+        "additionalProperties": false,
+        "properties": {
+          "platform": { "type": "string" },
+          "name": { "type": "string" },
+          "url": { "type": "string" },
+          "accessType": { "type": "string" },
+          "reliability": {
+            "type": "string",
+            "enum": ["high", "medium", "low", "unknown"]
+          },
+          "notes": { "type": "string" }
+        }
+      }
+    },
+    "suggestedExperiments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["title", "reason", "nextStep"],
+        "additionalProperties": false,
+        "properties": {
+          "title": { "type": "string" },
+          "reason": { "type": "string" },
+          "nextStep": { "type": "string" },
+          "relatedFindingCategories": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    },
+    "privacyNotes": { "type": "string" }
+  }
+}

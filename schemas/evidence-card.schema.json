@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://creator-intel-pipeline.local/schemas/evidence-card.schema.json",
+  "title": "EvidenceCard",
+  "type": "object",
+  "required": [
+    "id",
+    "source",
+    "category",
+    "summary",
+    "whyItMatters",
+    "reliability",
+    "privacyLevel",
+    "createdAt"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": { "type": "string", "minLength": 1 },
+    "itemId": { "type": "string" },
+    "findingId": { "type": "string" },
+    "source": {
+      "type": "object",
+      "required": ["platform", "name"],
+      "additionalProperties": false,
+      "properties": {
+        "platform": {
+          "type": "string",
+          "enum": ["REDDIT", "DISCORD", "SKOOL", "TELEGRAM", "YOUTUBE", "VIMEO", "MANUAL"]
+        },
+        "name": { "type": "string" },
+        "url": { "type": "string" },
+        "accessType": {
+          "type": "string",
+          "enum": ["public", "internal", "private", "paid"]
+        }
+      }
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "visual_consistency",
+        "image_to_video",
+        "ai_influencer",
+        "ugc_ads",
+        "platform_monetization",
+        "prompting",
+        "workflow_automation",
+        "tool_comparison",
+        "platform_policy",
+        "failure_case",
+        "growth_distribution"
+      ]
+    },
+    "summary": { "type": "string", "minLength": 1 },
+    "whyItMatters": { "type": "string", "minLength": 1 },
+    "sourcePointer": { "type": "string" },
+    "reliability": {
+      "type": "string",
+      "enum": ["high", "medium", "low", "unknown"]
+    },
+    "privacyLevel": {
+      "type": "string",
+      "enum": ["public", "internal", "private", "paid"]
+    },
+    "suggestedExperiment": { "type": "string" },
+    "relatedUrls": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "metadata": { "type": "object" },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "reviewedAt": { "type": "string", "format": "date-time" }
+  }
+}

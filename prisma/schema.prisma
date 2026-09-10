@@ -1,0 +1,144 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["intel"]
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+enum Platform {
+  REDDIT
+  DISCORD
+  SKOOL
+  TELEGRAM
+  YOUTUBE
+  VIMEO
+  MANUAL
+
+  @@schema("intel")
+}
+
+enum IngestionMethod {
+  API
+  BROWSER_AUTOMATION
+  CLIPBOARD
+  EXPORT
+  MANUAL_NOTES
+  TRANSCRIPT
+  PUBLIC_METADATA
+
+  @@schema("intel")
+}
+
+model Source {
+  id               String          @id @default(uuid())
+  platform         Platform
+  name             String
+  url              String          @unique
+  accessType       String          // public, private, paid
+  usefulnessScore  Int             @default(0) // 1-10
+  collectionMethod IngestionMethod
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  items            Item[]
+  artifacts        Artifact[]
+
+  @@map("sources")
+  @@schema("intel")
+}
+
+model Item {
+  id             String      @id @default(uuid())
+  sourceId       String
+  source         Source      @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  platformItemId String?     // e.g. post ID or message ID
+  authorHash     String?     // anonymized author
+  url            String?
+  title          String?
+  body           String
+  metadata       Json?       // extra data (upvotes, reactions)
+  createdAt      DateTime    @default(now())
+  collectedAt    DateTime    @default(now())
+  findings       Finding[]
+  tags           ItemTag[]
+  artifacts      Artifact[]
+  evidenceCards  EvidenceCard[]
+
+  @@map("items")
+  @@schema("intel")
+}
+
+model Artifact {
+  id               String   @id @default(uuid())
+  sourceId         String?
+  source           Source?  @relation(fields: [sourceId], references: [id], onDelete: Cascade)
+  itemId           String?
+  item             Item?    @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  artifactType     String   // raw_export, video_metadata, transcript, screenshot, normalized_file
+  platform         Platform?
+  url              String?
+  localPath        String?
+  title            String?
+  transcriptMethod String?  // official_api, public_metadata, yt_dlp_subtitles, manual, unavailable
+  privacyLevel     String   @default("public") // public, internal, private, paid
+  metadata         Json?
+  createdAt        DateTime @default(now())
+
+  @@map("artifacts")
+  @@schema("intel")
+}
+
+model ItemTag {
+  id        String   @id @default(uuid())
+  itemId    String
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  tag       String   // e.g. "visual_consistency", "flux", "kling"
+  confidence Float   @default(1.0)
+  
+  @@unique([itemId, tag])
+  @@map("item_tags")
+  @@schema("intel")
+}
+
+model Finding {
+  id                    String   @id @default(uuid())
+  itemId                String
+  item                  Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  category              String   // e.g. "visual_consistency", "monetization"
+  claim                 String
+  evidenceSummary       String
+  usefulnessScore       Int      @default(0)
+  riskNotes             String?
+  recommendedAction     String?
+  personaVersion        String?  // e.g. "persona-v2"
+  exportedToResearchAt  DateTime?
+  createdAt             DateTime @default(now())
+  evidenceCards         EvidenceCard[]
+
+  @@map("findings")
+  @@schema("intel")
+}
+
+model EvidenceCard {
+  id                  String   @id @default(uuid())
+  itemId              String
+  item                Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  findingId           String?
+  finding             Finding? @relation(fields: [findingId], references: [id], onDelete: SetNull)
+  category            String
+  summary             String
+  whyItMatters        String
+  sourcePointer       String?
+  reliability         String   @default("unknown") // high, medium, low, unknown
+  privacyLevel        String   @default("public") // public, internal, private, paid
+  suggestedExperiment String?
+  metadata            Json?
+  createdAt           DateTime @default(now())
+  reviewedAt          DateTime?
+
+  @@map("evidence_cards")
+  @@schema("intel")
+}

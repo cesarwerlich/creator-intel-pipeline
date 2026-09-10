@@ -1,0 +1,39 @@
+{
+  "name": "creator-intel-pipeline",
+  "version": "1.0.0",
+  "description": "Creator intelligence and data-ingestion pipeline. Connects to subreddits, Discord communities, and Skool learning bootcamps to extract workflows, visual benchmark configurations, and monetization insights.",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "ingest:telegram": "tsx src/scripts/ingest-telegram-export.ts",
+    "ingest:skool-notes": "tsx src/scripts/ingest-skool-notes.ts",
+    "extract:video-links": "tsx src/scripts/extract-video-links.ts",
+    "attach:transcript": "tsx src/scripts/attach-transcript.ts",
+    "export:weekly-brief": "tsx src/scripts/export-weekly-brief.ts",
+    "export:telegram-chat": "tsx src/scripts/export-telegram-chat.ts",
+    "stats:sources": "tsx src/scripts/source-stats.ts",
+    "health:sources": "tsx src/scripts/source-health.ts",
+    "build:evidence-cards": "tsx src/scripts/build-evidence-cards.ts",
+    "build:findings": "tsx src/scripts/build-findings.ts",
+    "test": "npm run typecheck"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "prisma": "^6.4.0",
+    "tsx": "^4.22.3",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.4.0",
+    "@supabase/supabase-js": "^2.49.1",
+    "axios": "^1.6.5",
+    "dotenv": "^16.3.1",
+    "input": "^1.0.1",
+    "playwright": "^1.41.1",
+    "telegram": "^2.26.22"
+  }
+}
