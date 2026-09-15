@@ -1,6 +1,6 @@
 # creator-intel-pipeline
 
-Creator intelligence ingestion pipeline for AI influencer research.
+Creator intelligence ingestion pipeline for creator research.
 
 This repo collects and normalizes source material from communities and videos, then turns it into reviewed evidence cards, findings, and suggested experiments. It feeds sanitized outputs into the separate `downstream-research-repo` repo.
 

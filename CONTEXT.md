@@ -12,7 +12,7 @@ signal -> evidence card -> finding -> suggested experiment -> research bundle
 
 ## Who It Serves
 
-- Cesar and collaborators doing AI influencer research.
+- Cesar and collaborators doing creator research.
 - The `downstream-research-repo` repo, which receives sanitized findings and experiment ideas.
 - Future coding agents that need a safe place to work on ingestion, transcript enrichment, and export tooling.
 
